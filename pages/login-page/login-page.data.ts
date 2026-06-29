@@ -1,5 +1,5 @@
 export class LoginPageData {
-    get credentials(){
+    static get credentials(){
         return{
             usernames: {
                 standardUser: 'standard_user',
