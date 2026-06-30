@@ -29,7 +29,7 @@ export class CheckoutPageMethods {
     }
 
     async fillCheckoutInformation(firstName: string, lastName: string, postalCode: string) {
-        await test.step('Rellenar formulario de datos de env\ío', async () => {
+        await test.step('Rellenar formulario de datos de envío', async () => {
             await this.fillFirstName(firstName)
             await this.fillLastName(lastName)
             await this.fillPostalCode(postalCode)

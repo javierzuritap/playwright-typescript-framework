@@ -7,7 +7,7 @@ const { errorMessages } = LoginPageData
 
 test.describe('Login', () => {
     test.beforeEach(async ({ commonPageMethods }) => {
-        // Arrange
+        
         await commonPageMethods.navigateToTheApplication()
     })
 
@@ -15,10 +15,10 @@ test.describe('Login', () => {
         await allure.description('Verifica que un usuario válido puede iniciar sesión y acceder a la página de productos.')
         await allure.severity('critical')
 
-        // Act
+        
         await loginPageMethods.login(usernames.standardUser, password)
 
-        // Assert
+        
         await productsPageMethods.verifyProductsPageIsDisplayed()
     })
 
@@ -26,10 +26,10 @@ test.describe('Login', () => {
         await allure.description('Verifica que un usuario bloqueado recibe el mensaje de error correspondiente.')
         await allure.severity('normal')
 
-        // Act
+        
         await loginPageMethods.login(usernames.lockedOutUser, password)
 
-        // Assert
+        
         await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.lockedOut)
     })
 
@@ -37,32 +37,32 @@ test.describe('Login', () => {
         await allure.description('Verifica que credenciales inválidas muestran el mensaje de error genérico.')
         await allure.severity('critical')
 
-        // Act
+        
         await loginPageMethods.login('invalid_user', 'wrong_password')
 
-        // Assert
+        
         await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.invalidCredentials)
     })
 
     test('should show error when username is empty', async ({ loginPageMethods }) => {
-        await allure.description('Verifica que el login falla si el campo usuario está vac\ío.')
+        await allure.description('Verifica que el login falla si el campo usuario está vacío.')
         await allure.severity('normal')
 
-        // Act
+        
         await loginPageMethods.login('', password)
 
-        // Assert
+        
         await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.emptyUsername)
     })
 
     test('should show error when password is empty', async ({ loginPageMethods }) => {
-        await allure.description('Verifica que el login falla si el campo contraseña está vac\ío.')
+        await allure.description('Verifica que el login falla si el campo contraseña está vacío.')
         await allure.severity('normal')
 
-        // Act
+        
         await loginPageMethods.login(usernames.standardUser, '')
 
-        // Assert
+        
         await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.emptyPassword)
     })
 })
