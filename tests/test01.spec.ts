@@ -1,18 +1,68 @@
-import { test } from '@playwright/test';
-import { CommonPageMethods } from '../pages/common-page/common-page.methods';
-import { LoginPageMethods } from '../pages/login-page/login-page.methods';
-import { LoginPageData } from '../pages/login-page/login-page.data';
+import { test } from '../fixtures/fixtures'
+import { LoginPageData } from '../pages/login-page/login-page.data'
+import { allure } from 'allure-playwright'
 
-const userCredentials = LoginPageData.credentials;
+const { usernames, password } = LoginPageData.credentials
+const { errorMessages } = LoginPageData
 
-test('Login', async ({ page }) => {
-    const commonPageMethods = new CommonPageMethods(page);
-    const loginPageMethods = new LoginPageMethods(page)
+test.describe('Login', () => {
+    test.beforeEach(async ({ commonPageMethods }) => {
+        // Arrange
+        await commonPageMethods.navigateToTheApplication()
+    })
 
-    await commonPageMethods.navigateToTheApplication();
-    await loginPageMethods.insertUsername(userCredentials.usernames.standardUser)
-    await loginPageMethods.insertPassword(userCredentials.password)
-    await loginPageMethods.clickOnLoginButton()
-    await commonPageMethods.openMenu()
-    await page.waitForTimeout(5000)
-});
+    test('should login successfully with standard_user', async ({ loginPageMethods, productsPageMethods }) => {
+        await allure.description('Verifica que un usuario válido puede iniciar sesión y acceder a la página de productos.')
+        await allure.severity('critical')
+
+        // Act
+        await loginPageMethods.login(usernames.standardUser, password)
+
+        // Assert
+        await productsPageMethods.verifyProductsPageIsDisplayed()
+    })
+
+    test('should show error for locked_out_user', async ({ loginPageMethods }) => {
+        await allure.description('Verifica que un usuario bloqueado recibe el mensaje de error correspondiente.')
+        await allure.severity('normal')
+
+        // Act
+        await loginPageMethods.login(usernames.lockedOutUser, password)
+
+        // Assert
+        await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.lockedOut)
+    })
+
+    test('should show error for invalid credentials', async ({ loginPageMethods }) => {
+        await allure.description('Verifica que credenciales inválidas muestran el mensaje de error genérico.')
+        await allure.severity('critical')
+
+        // Act
+        await loginPageMethods.login('invalid_user', 'wrong_password')
+
+        // Assert
+        await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.invalidCredentials)
+    })
+
+    test('should show error when username is empty', async ({ loginPageMethods }) => {
+        await allure.description('Verifica que el login falla si el campo usuario está vac\ío.')
+        await allure.severity('normal')
+
+        // Act
+        await loginPageMethods.login('', password)
+
+        // Assert
+        await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.emptyUsername)
+    })
+
+    test('should show error when password is empty', async ({ loginPageMethods }) => {
+        await allure.description('Verifica que el login falla si el campo contraseña está vac\ío.')
+        await allure.severity('normal')
+
+        // Act
+        await loginPageMethods.login(usernames.standardUser, '')
+
+        // Assert
+        await loginPageMethods.verifyErrorMessageIsVisible(errorMessages.emptyPassword)
+    })
+})

@@ -1,22 +1,28 @@
-import { Page } from "@playwright/test"
+import { Page } from '@playwright/test'
 
-export class LoginPageElements{
+export class LoginPageElements {
     private page: Page
 
-    constructor(page: Page){
-        this.page=page
+    constructor(page: Page) {
+        this.page = page
     }
 
-    get textboxes(){
-        return{
+    get textboxes() {
+        return {
             username: this.page.locator('[data-test="username"]'),
             password: this.page.locator('[data-test="password"]'),
         }
     }
 
-    get buttons(){
-        return{
-            login: this.page.locator('#login-button')
+    get buttons() {
+        return {
+            login: this.page.locator('#login-button'),
+        }
+    }
+
+    get error() {
+        return {
+            container: this.page.locator('[data-test="error"]'),
         }
     }
 }

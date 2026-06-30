@@ -1,19 +1,53 @@
 {
   "name": "proyecto-playwright-ts",
   "version": "1.0.0",
-  "description": "",
+  "description": "Suite de automatizacion E2E para SauceDemo con Playwright + TypeScript, Page Object Model y reporte Allure.",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:login": "playwright test tests/test01.spec.ts",
+    "test:products": "playwright test tests/test02.spec.ts",
+    "test:cart": "playwright test tests/test03.spec.ts",
+    "test:checkout": "playwright test tests/test04.spec.ts",
+    "report:show": "playwright show-report",
+    "allure:clean": "rimraf allure-results allure-report",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:serve": "allure serve allure-results",
+    "pretest": "npm run allure:clean",
+    "posttest": "npm run allure:generate",
+    "install:browsers": "playwright install --with-deps",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
-  "keywords": [],
+  "keywords": [
+    "playwright",
+    "typescript",
+    "automation",
+    "qa",
+    "saucedemo",
+    "allure"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.44.0",
-    "@types/node": "^20.0.0"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^20.0.0",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^2.15.1",
+    "eslint": "^10.6.0",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.62.1"
   }
 }

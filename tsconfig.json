@@ -5,12 +5,14 @@
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "ignoreDeprecations": "6.0"
+    "skipLibCheck": true
   },
   "include": [
     "tests/**/*.ts",
-    "pages/**/*.ts"
+    "pages/**/*.ts",
+    "fixtures/**/*.ts",
+    "utils/**/*.ts",
+    "interfaces/**/*.ts"
   ],
   "exclude": [
     "node_modules"
