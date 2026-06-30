@@ -1,25 +1,29 @@
-# proyecto-playwright-ts
+# playwright-project-ts
 
-Suite de automatización E2E para [SauceDemo](https://www.saucedemo.com) construida con Playwright + TypeScript, siguiendo el patrón Page Object Model, con fixtures personalizadas, reporte Allure y pipeline de CI/CD en GitHub Actions.
+End-to-end (E2E) automation suite for SauceDemo built with **Playwright + TypeScript**, following the **Page Object Model (POM)** pattern, featuring custom fixtures, Allure reporting, and a complete CI/CD pipeline using GitHub Actions.
 
-## Stack
+---
+
+# Tech Stack
 
 - Playwright + @playwright/test
 - TypeScript
-- Page Object Model (elements / methods / data separados por página)
-- Fixtures personalizadas (`fixtures/fixtures.ts`)
+- Page Object Model (separate elements / methods / data per page)
+- Custom Playwright Fixtures (`fixtures/fixtures.ts`)
 - Allure Report (`allure-playwright`)
 - ESLint + typescript-eslint
-- GitHub Actions (CI + publicación en GitHub Pages)
+- GitHub Actions (CI/CD + GitHub Pages deployment)
 
-## Estructura del proyecto
+---
 
-```
+# Project Structure
+
+```text
 .
-├── .github/workflows/playwright.yml   Pipeline de CI/CD
-├── fixtures/fixtures.ts               Fixtures de Playwright (test y authenticatedTest)
-├── interfaces/                        Interfaces TypeScript (User, Product, CheckoutInformation)
-├── pages/                             Page Objects (separados en elements/methods/data)
+├── .github/workflows/playwright.yml   CI/CD pipeline
+├── fixtures/fixtures.ts               Playwright fixtures (test & authenticatedTest)
+├── interfaces/                        TypeScript interfaces (User, Product, CheckoutInformation)
+├── pages/                             Page Objects (split into elements/methods/data)
 │   ├── common-page/
 │   ├── login-page/
 │   ├── products-page/
@@ -27,106 +31,159 @@ Suite de automatización E2E para [SauceDemo](https://www.saucedemo.com) constru
 │   ├── cart-page/
 │   ├── checkout-page/
 │   └── checkout-overview-page/
-├── tests/                             Suites de test (test01 Login, test02 Products, test03 Cart, test04 Checkout)
-├── utils/logger.ts                    Logger reutilizable
+├── tests/                             Test suites (Login, Products, Cart, Checkout)
+├── utils/logger.ts                    Reusable logger
 ├── playwright.config.ts
 ├── tsconfig.json
 └── package.json
 ```
 
-## Instalación
+---
 
-### Requisitos previos
+# Installation
 
-- Node.js 18 o superior (recomendado 22)
+## Prerequisites
+
+- Node.js 18 or later (Node.js 22 recommended)
 - npm
 
-### Pasos desde una carpeta vacía
+## Clone the repository
 
 ```bash
 git clone https://github.com/javierzuritap/proyecto-playwright-ts.git
 cd proyecto-playwright-ts
+```
+
+## Install dependencies
+
+```bash
 npm install
+```
+
+## Install Playwright browsers
+
+```bash
 npx playwright install --with-deps
 ```
 
-Si solo necesitas un navegador concreto:
+If you only need a specific browser:
 
 ```bash
 npx playwright install chromium --with-deps
 ```
 
-Para generar y visualizar el reporte Allure en local necesitas además tener Java instalado (Allure Commandline lo requiere). La dependencia `allure-commandline` ya queda instalada con `npm install`.
+To generate and view Allure reports locally, Java must also be installed because Allure Commandline requires it. The `allure-commandline` dependency is installed automatically when running `npm install`.
 
-## Ejecución de los tests
+---
+
+# Running the Tests
 
 ```bash
-npm test                       # Todos los tests, todos los navegadores
-npm run test:chromium          # Solo Chromium
-npm run test:firefox           # Solo Firefox
-npm run test:webkit            # Solo WebKit
-npm run test:headed            # Con navegador visible
-npm run test:debug             # Modo debug paso a paso
+npm test                       # Run all tests on all browsers
+npm run test:chromium          # Chromium only
+npm run test:firefox           # Firefox only
+npm run test:webkit            # WebKit only
+npm run test:headed            # Run with browser UI
+npm run test:debug             # Debug mode
 npm run test:ui                # Playwright UI Mode
 
-npm run test:login             # Solo la suite de Login (test01)
-npm run test:products          # Solo la suite de Products (test02)
-npm run test:cart              # Solo la suite de Cart (test03)
-npm run test:checkout          # Solo la suite de Checkout (test04)
+npm run test:login             # Login suite
+npm run test:products          # Products suite
+npm run test:cart              # Cart suite
+npm run test:checkout          # Checkout suite
 ```
 
-Ejecutar un test concreto por nombre:
+Run a specific test by name:
 
 ```bash
 npx playwright test -g "should login successfully with standard_user"
 ```
 
-Ejecutar un archivo concreto:
+Run a specific test file:
 
 ```bash
 npx playwright test tests/test02.spec.ts
 ```
 
-## Reporte Allure
+---
+
+# Allure Report
 
 ```bash
-npm run allure:clean       # Limpia allure-results y allure-report
-npm run allure:generate    # Genera el reporte HTML a partir de allure-results
-npm run allure:open        # Abre el reporte ya generado
-npm run allure:serve       # Genera y abre el reporte en un solo paso
+npm run allure:clean       # Remove previous reports
+npm run allure:generate    # Generate HTML report
+npm run allure:open        # Open generated report
+npm run allure:serve       # Generate and open report
 ```
 
-El script `pretest` limpia automáticamente los resultados antes de cada ejecución y `posttest` genera el reporte al finalizar, así que tras un `npm test` normal basta con `npm run allure:open`.
-
-## Calidad de código
+The `pretest` script automatically cleans previous results before each execution, while `posttest` generates the report after the test run. Therefore, after running `npm test`, simply execute:
 
 ```bash
-npm run typecheck    # Compilación TypeScript sin generar archivos
-npm run lint          # ESLint sobre todo el proyecto
+npm run allure:open
 ```
 
-## CI/CD
+---
 
-El workflow `.github/workflows/playwright.yml` se ejecuta en:
+# Code Quality
 
-- Push a `main`, `master` y `feature/**`
-- Pull requests contra `main` o `master`
-- Manualmente mediante `workflow_dispatch`
+```bash
+npm run typecheck    # TypeScript compilation without emitting files
+npm run lint         # Run ESLint across the project
+```
 
-En cada ejecución: instala dependencias, instala los navegadores, compila TypeScript, pasa ESLint, ejecuta los tests, genera el reporte Allure, sube como artifacts el reporte HTML de Playwright, el reporte Allure y los resultados crudos, y publica el reporte Allure en GitHub Pages cuando la ejecución es sobre `main`.
+---
 
-### Activar GitHub Pages (solo la primera vez)
+# CI/CD
 
-1. Entra en el repositorio en GitHub → **Settings** → **Pages**.
-2. En **Source**, selecciona **GitHub Actions**.
-3. Guarda. No hace falta seleccionar ninguna rama ni carpeta adicional: el workflow ya se encarga de publicar el artifact correcto.
-4. Tras el primer `push` a `main` con el workflow activo, la URL del reporte aparecerá en la pestaña **Actions**, dentro del job `deploy`, y también en Settings → Pages.
+The workflow located at:
 
-## Usuarios de prueba (SauceDemo)
+```text
+.github/workflows/playwright.yml
+```
 
-| Usuario | Contraseña | Comportamiento |
-|---|---|---|
-| `standard_user` | `secret_sauce` | Usuario válido estándar |
-| `locked_out_user` | `secret_sauce` | Usuario bloqueado |
-| `problem_user` | `secret_sauce` | Usuario con bugs visuales intencionados |
-| `performance_glitch_user` | `secret_sauce` | Usuario con lentitud intencionada |
+runs automatically on:
+
+- Push to `main`, `master`, and `feature/**`
+- Pull Requests targeting `main` or `master`
+- Manual execution via `workflow_dispatch`
+
+Each execution performs the following steps:
+
+- Installs dependencies
+- Installs Playwright browsers
+- Runs TypeScript type checking
+- Executes ESLint
+- Runs all Playwright tests
+- Generates the Allure report
+- Uploads the following artifacts:
+  - Playwright HTML Report
+  - Allure HTML Report
+  - Raw Allure Results
+- Deploys the Allure report to GitHub Pages when running from the `main` branch
+
+---
+
+# Enable GitHub Pages (First Time Only)
+
+1. Open your repository on GitHub.
+2. Go to **Settings → Pages**.
+3. Under **Source**, select **GitHub Actions**.
+4. Save the configuration.
+
+No branch or folder selection is required—the workflow automatically publishes the correct artifact.
+
+After the first successful push to `main`, the report URL will be available:
+
+- In the **Actions** tab, inside the **Deploy** job.
+- Under **Settings → Pages**.
+
+---
+
+# SauceDemo Test Users
+
+| Username | Password | Description |
+|----------|----------|-------------|
+| standard_user | secret_sauce | Standard valid user |
+| locked_out_user | secret_sauce | Locked user |
+| problem_user | secret_sauce | User with intentional UI issues |
+| performance_glitch_user | secret_sauce | User with intentional performance delays |
